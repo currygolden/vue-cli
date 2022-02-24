@@ -16,6 +16,7 @@ const loadRemotePreset = require('./util/loadRemotePreset')
 const generateReadme = require('./util/generateReadme')
 const { resolvePkg, isOfficialPlugin } = require('@vue/cli-shared-utils')
 
+// 一些默认的配置项，在构造类里比较常见
 const {
   defaults,
   saveOptions,
@@ -50,7 +51,9 @@ module.exports = class Creator extends EventEmitter {
     super()
 
     this.name = name
+    // 注入的环境变量
     this.context = process.env.VUE_CLI_CONTEXT = context
+    // constructor 内调用自身的方法
     const { presetPrompt, featurePrompt } = this.resolveIntroPrompts()
 
     this.presetPrompt = presetPrompt
@@ -60,9 +63,9 @@ module.exports = class Creator extends EventEmitter {
     this.promptCompleteCbs = []
     this.afterInvokeCbs = []
     this.afterAnyInvokeCbs = []
-
+    // 构造类内bind
     this.run = this.run.bind(this)
-
+    // promptAPI对象 有相应的api
     const promptAPI = new PromptModuleAPI(this)
     promptModules.forEach(m => m(promptAPI))
   }
@@ -127,6 +130,7 @@ module.exports = class Creator extends EventEmitter {
     const pm = new PackageManager({ context, forcePackageManager: packageManager })
 
     log(`✨  Creating project in ${chalk.yellow(context)}.`)
+    // eventEmitter
     this.emit('creation', { event: 'creating' })
 
     // get latest CLI plugin version
@@ -389,14 +393,16 @@ module.exports = class Creator extends EventEmitter {
     }
     return plugins
   }
-
+  // 获取预设配置项
   getPresets () {
     const savedOptions = loadOptions()
     return Object.assign({}, savedOptions.presets, defaults.presets)
   }
 
+  // 生成用于命令行交互的选项
   resolveIntroPrompts () {
     const presets = this.getPresets()
+    // entries 的遍历结果
     const presetChoices = Object.entries(presets).map(([name, preset]) => {
       let displayName = name
       if (name === 'default') {
@@ -506,7 +512,7 @@ module.exports = class Creator extends EventEmitter {
 
     return outroPrompts
   }
-
+  // 生成全部的交互选项
   resolveFinalPrompts () {
     // patch generator-injected prompts to only show in manual mode
     this.injectedPrompts.forEach(prompt => {

@@ -4,7 +4,7 @@ const { getRcPath } = require('./util/rcPath')
 const { exit } = require('@vue/cli-shared-utils/lib/exit')
 const { error } = require('@vue/cli-shared-utils/lib/logger')
 const { createSchema, validate } = require('@vue/cli-shared-utils/lib/validate')
-
+// 特定目录
 const rcPath = exports.rcPath = getRcPath('.vuerc')
 
 const presetSchema = createSchema((joi) =>
@@ -87,12 +87,15 @@ exports.defaults = {
 
 let cachedOptions
 
+// 常见的 node.js 模块化方式，从特定的目录读取缓存的配置
 exports.loadOptions = () => {
   if (cachedOptions) {
     return cachedOptions
   }
+  // 路径存在则返回 true，否则返回 false
   if (fs.existsSync(rcPath)) {
     try {
+      // 读取特定文件数据
       cachedOptions = JSON.parse(fs.readFileSync(rcPath, 'utf-8'))
     } catch (e) {
       error(

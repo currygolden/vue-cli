@@ -1,6 +1,7 @@
 const { chalk } = require('@vue/cli-shared-utils')
 const getGlobalInstallCommand = require('./getGlobalInstallCommand')
 
+// 全局依赖提示
 module.exports = function loadCommand (commandName, moduleName) {
   const isNotFoundError = err => {
     return err.message.match(/Cannot find module/)

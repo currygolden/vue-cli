@@ -1,3 +1,4 @@
+// 继承于fs的模块，支持异步
 const fs = require('fs-extra')
 const path = require('path')
 const inquirer = require('inquirer')
@@ -7,11 +8,12 @@ const { getPromptModules } = require('./util/createTools')
 const { chalk, error, stopSpinner, exit } = require('@vue/cli-shared-utils')
 const validateProjectName = require('validate-npm-package-name')
 
+// 判读是否已存在目录
 async function create (projectName, options) {
   if (options.proxy) {
     process.env.HTTP_PROXY = options.proxy
   }
-
+  // 自定义目录/当前工作目录
   const cwd = options.cwd || process.cwd()
   const inCurrent = projectName === '.'
   const name = inCurrent ? path.relative('../', cwd) : projectName
@@ -68,10 +70,12 @@ async function create (projectName, options) {
     }
   }
 
+  //
   const creator = new Creator(name, targetDir, getPromptModules())
+  // 对目录的判断最后落到 creator.create
   await creator.create(options)
 }
-
+// 最后require xxx
 module.exports = (...args) => {
   return create(...args).catch(err => {
     stopSpinner(false) // do not persist

@@ -22,6 +22,7 @@ const migrateWindowsConfigPath = file => {
   }
   const appData = process.env.APPDATA
   if (appData) {
+    // 路径拼接
     const rcDir = path.join(appData, 'vue')
     const rcFile = path.join(rcDir, file)
     const properRcFile = path.join(os.homedir(), file)

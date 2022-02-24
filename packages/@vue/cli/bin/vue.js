@@ -2,11 +2,13 @@
 
 // Check node version before requiring/doing anything else
 // The user may be on a very old node version
-
+// semver: npm 的语义化版本工具
 const { chalk, semver } = require('@vue/cli-shared-utils')
 const requiredVersion = require('../package.json').engines.node
+// 获取字符串最小相等修改
 const leven = require('leven')
 
+// 检查 node 版本
 function checkNodeVersion (wanted, id) {
   if (!semver.satisfies(process.version, wanted, { includePrerelease: true })) {
     console.log(chalk.red(
@@ -21,7 +23,9 @@ checkNodeVersion(requiredVersion, '@vue/cli')
 
 const fs = require('fs')
 const path = require('path')
+// windows文件路径转换
 const slash = require('slash')
+// 命令行参数解析
 const minimist = require('minimist')
 
 // enter debug mode when creating test repo
@@ -42,6 +46,7 @@ program
   .usage('<command> [options]')
 
 program
+  // 定义一个命令
   .command('create <app-name>')
   .description('create a new project powered by vue-cli-service')
   .option('-p, --preset <presetName>', 'Skip prompts and use saved or remote preset')
@@ -68,6 +73,7 @@ program
     require('../lib/create')(name, options)
   })
 
+  // 增加插件
 program
   .command('add <plugin> [pluginOptions]')
   .description('install a plugin and invoke its generator in an already created project')
@@ -197,7 +203,7 @@ program
     ).then(console.log)
   })
 
-// output help information on unknown commands
+// output help information on unknown commands,处理任意命令
 program.on('command:*', ([cmd]) => {
   program.outputHelp()
   console.log(`  ` + chalk.red(`Unknown command ${chalk.yellow(cmd)}.`))
